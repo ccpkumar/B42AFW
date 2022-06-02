@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.support.wait import WebDriverWait
-
+import os
 class Base_Setup:
 
     @pytest.fixture(autouse=True)
@@ -25,7 +25,7 @@ class Base_Setup:
                 browser_type=webdriver.ChromeOptions()
             else:
                 browser_type=webdriver.FirefoxOptions()
-
+            os.environ['GH_TOKEN'] = "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"
             print("Opening the ",BROWSER," browser in remote system")
             self.driver = webdriver.Remote(command_executor=GRID_URL,options=browser_type)
         else:
@@ -34,7 +34,9 @@ class Base_Setup:
             if BROWSER == "chrome":
                 self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
             else:
+                os.environ['GH_TOKEN'] = "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"
                 self.driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()))
+
 
         self.driver.implicitly_wait(ITO)
         self.driver.maximize_window()
