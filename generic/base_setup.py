@@ -8,41 +8,42 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class Base_Setup:
-    xl_path="test_data/data.xlsx"
+    xl_path = "test_data/data.xlsx"
+    pfile = Properties()
+    pfile.load(open("config.properties"))
+    ITO = pfile["ITO"]
+    ETO = pfile["ETO"]
+    URL = pfile["URL"]
+    GRID = pfile["GRID"]
+    GRID_URL = pfile["GRID_URL"]
+    BROWSER = pfile["BROWSER"]
+
     @pytest.fixture(autouse=True)
     def pre_condition(self):
-        pfile = Properties()
-        pfile.load(open("config.properties"))
-        ITO = pfile["ITO"]
-        ETO = pfile["ETO"]
-        URL = pfile["URL"]
-        GRID = pfile["GRID"]
-        GRID_URL = pfile["GRID_URL"]
-        BROWSER = pfile["BROWSER"]
 
-        if GRID == "Yes":
+        if self.GRID == "Yes":
             print("Using grid for script execution")
-            if BROWSER == "chrome":
+            if self.BROWSER == "chrome":
                 browser_type = webdriver.ChromeOptions()
             else:
                 browser_type = webdriver.FirefoxOptions()
 
-            print("Opening the ", BROWSER, " browser in remote system")
-            self.driver = webdriver.Remote(command_executor=GRID_URL, options=browser_type)
+            print("Opening the ", self.BROWSER, " browser in remote system")
+            self.driver = webdriver.Remote(command_executor=self.GRID_URL, options=browser_type)
 
         else:
             print("Using local system for script execution")
-            print("Opening the ", BROWSER, " browser in local system")
+            print("Opening the ", self.BROWSER, " browser in local system")
 
-            if BROWSER == "chrome":
+            if self.BROWSER == "chrome":
                 self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
             else:
                 self.driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()))
 
-        self.driver.implicitly_wait(ITO)
+        self.driver.implicitly_wait(self.ITO)
         self.driver.maximize_window()
-        self.driver.get(URL)
-        self.wait = WebDriverWait(self.driver, ETO)
+        self.driver.get(self.URL)
+        self.wait = WebDriverWait(self.driver, self.ETO)
 
     @pytest.fixture(autouse=True)
     def post_condition(self):

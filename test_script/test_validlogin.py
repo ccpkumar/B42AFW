@@ -5,12 +5,13 @@ from page.login_page import LoginPage
 from page.enter_time_track_page import EnterTimeTrackPage
 from generic.utility import Excel
 
+
 class TestValidLogin(Base_Setup):
 
     @pytest.mark.run(order=1)
     def test_valid_login(self):
-        un=Excel.get_data(self.xl_path,"valid_login",2,1)
-        pw=Excel.get_data(self.xl_path,"valid_login",2,2)
+        un = Excel.get_data(self.xl_path, "valid_login", 2, 1)
+        pw = Excel.get_data(self.xl_path, "valid_login", 2, 2)
 
         # 1.	Enter valid username
         login_page = LoginPage(self.driver)
@@ -26,3 +27,4 @@ class TestValidLogin(Base_Setup):
         enter_time_track_page = EnterTimeTrackPage(self.driver)
         result = enter_time_track_page.verify_homepage_is_displayed(self.wait)
         assert result
+
